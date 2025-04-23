@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,16 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				notion: {
+					purple: '#9b87f5',
+					border: '#e6e6e6',
+					muted: '#f1f1f1',
+					bg: '#ffffff',
+					sidebar: '#f6f6f7',
+					hover: '#eeeeee',
+					text: '#222222',
+					'text-muted': '#888888',
 				}
 			},
 			borderRadius: {
@@ -89,7 +100,12 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+			},
+			fontFamily: {
+				sans: [
+					'Inter var, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+				],
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],

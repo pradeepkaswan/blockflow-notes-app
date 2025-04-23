@@ -1,10 +1,10 @@
-
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { usePageStore } from "@/stores/pageStore";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import EditorComponent from "@/components/EditorComponent";
+import { SummaryButton } from "@/components/SummaryButton";
 import { debounce } from "@/lib/utils";
 
 const Editor = () => {
@@ -53,7 +53,12 @@ const Editor = () => {
           className="text-3xl font-bold border-none p-0 h-auto focus-visible:ring-0 bg-transparent"
         />
       </div>
-      <EditorComponent pageId={id} content={page.content} />
+      <div className="space-y-4">
+        <EditorComponent pageId={id} content={page.content} />
+        <div className="mt-6">
+          <SummaryButton content={page.content} />
+        </div>
+      </div>
     </div>
   );
 };

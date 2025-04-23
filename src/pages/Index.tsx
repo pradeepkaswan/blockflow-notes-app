@@ -13,10 +13,10 @@ const Index = () => {
           A Notion-style block editor for your notes
         </p>
         <Button 
-          onClick={() => navigate("/dashboard")}
+          onClick={() => navigate("/auth")}
           className="bg-notion-purple hover:bg-notion-purple/90 text-white"
         >
-          Get Started
+          Login / Sign Up
         </Button>
       </div>
     </div>

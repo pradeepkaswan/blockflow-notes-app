@@ -8,6 +8,8 @@ import { AppLayout } from "./layouts/AppLayout";
 import Dashboard from "./pages/Dashboard";
 import Editor from "./pages/Editor";
 import NotFound from "./pages/NotFound";
+import Index from "./pages/Index";
+import Auth from "./pages/Auth";
 
 const queryClient = new QueryClient();
 
@@ -18,11 +20,13 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<AppLayout />}>
+          <Route path="/" element={<Index />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/dashboard" element={<AppLayout />}>
             <Route index element={<Dashboard />} />
-            <Route path="/page/:id" element={<Editor />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="/dashboard/page/:id" element={<Editor />} />
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

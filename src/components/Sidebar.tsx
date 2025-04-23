@@ -25,7 +25,7 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
 
   const handleAddPage = () => {
     const newPage = addPage();
-    navigate(`/page/${newPage.id}`);
+    navigate(`/dashboard/page/${newPage.id}`);
   };
   
   return (
@@ -76,7 +76,7 @@ const Sidebar = ({ isOpen, setIsOpen }: SidebarProps) => {
               {pages.map((page) => (
                 <Link 
                   key={page.id}
-                  to={`/page/${page.id}`}
+                  to={`/dashboard/page/${page.id}`}
                   className="flex items-center gap-2 p-1 text-sm rounded-sm hover:bg-notion-hover my-1"
                 >
                   <FileText className="h-4 w-4 text-notion-text-muted" />

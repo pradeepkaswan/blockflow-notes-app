@@ -10,7 +10,7 @@ const Dashboard = () => {
   
   const handleAddPage = () => {
     const newPage = addPage();
-    navigate(`/page/${newPage.id}`);
+    navigate(`/dashboard/page/${newPage.id}`);
   };
 
   return (
@@ -31,7 +31,7 @@ const Dashboard = () => {
           <div 
             key={page.id} 
             className="border rounded-md h-32 p-4 hover:border-notion-purple cursor-pointer shadow-sm hover:shadow transition-all"
-            onClick={() => navigate(`/page/${page.id}`)}
+            onClick={() => navigate(`/dashboard/page/${page.id}`)}
           >
             <h3 className="font-medium truncate">{page.title || "Untitled"}</h3>
           </div>

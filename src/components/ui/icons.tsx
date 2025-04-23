@@ -1,6 +1,10 @@
 
-import { Google } from "lucide-react";
+import { LucideProps } from "lucide-react";
+import { BsGoogle } from "react-icons/bs";
+import { ComponentType } from "react";
+
+export type Icon = ComponentType<LucideProps>;
 
 export const Icons = {
-  google: Google,
+  google: BsGoogle as unknown as Icon,
 };

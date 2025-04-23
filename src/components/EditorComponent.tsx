@@ -40,70 +40,67 @@ const EditorComponent = ({ pageId, content }: EditorJSProps) => {
         Table = TableModule.default;
         ImageTool = ImageModule.default;
 
+        // Clear previous editor instance if exists
+        if (editorRef.current) {
+          editorRef.current.destroy();
+          editorRef.current = null;
+        }
+
         // Initialize editor
-        if (!editorRef.current) {
-          const editor = new EditorJS({
-            holder: 'editorjs',
-            tools: {
-              header: {
-                class: Header,
-                inlineToolbar: true,
-                config: {
-                  levels: [1, 2, 3],
-                  defaultLevel: 1
-                }
-              },
-              paragraph: {
-                class: Paragraph,
-                inlineToolbar: true
-              },
-              checklist: {
-                class: Checklist,
-                inlineToolbar: true
-              },
-              table: {
-                class: Table,
-                inlineToolbar: true
-              },
-              image: {
-                class: ImageTool,
-                config: {
-                  uploader: {
-                    uploadByFile(file: File) {
-                      // For now, we'll use a placeholder image since we don't have Supabase storage yet
-                      return Promise.resolve({
-                        success: 1,
-                        file: {
-                          url: URL.createObjectURL(file),
-                        }
-                      });
-                    }
+        const editor = new EditorJS({
+          holder: 'editorjs',
+          tools: {
+            header: {
+              class: Header,
+              inlineToolbar: true,
+              config: {
+                levels: [1, 2, 3],
+                defaultLevel: 1
+              }
+            },
+            paragraph: {
+              class: Paragraph,
+              inlineToolbar: true
+            },
+            checklist: {
+              class: Checklist,
+              inlineToolbar: true
+            },
+            table: {
+              class: Table,
+              inlineToolbar: true
+            },
+            image: {
+              class: ImageTool,
+              config: {
+                uploader: {
+                  uploadByFile(file: File) {
+                    // For now, we'll use a placeholder image since we don't have Supabase storage yet
+                    return Promise.resolve({
+                      success: 1,
+                      file: {
+                        url: URL.createObjectURL(file),
+                      }
+                    });
                   }
                 }
               }
-            },
-            data: content || {},
-            onChange: async () => {
-              try {
-                const savedData = await editor.save();
-                updatePage(pageId, { content: savedData });
-              } catch (e) {
-                console.error('Failed to save editor data', e);
-              }
-            },
-            autofocus: true,
-          });
-          
-          editorRef.current = editor;
-          setEditorInstance(editor);
-          
-          return () => {
-            if (editorRef.current) {
-              editorRef.current.destroy();
-              editorRef.current = null;
             }
-          };
-        }
+          },
+          data: content || {},
+          onChange: async () => {
+            try {
+              const savedData = await editor.save();
+              updatePage(pageId, { content: savedData });
+            } catch (e) {
+              console.error('Failed to save editor data', e);
+            }
+          },
+          autofocus: true,
+        });
+        
+        editorRef.current = editor;
+        setEditorInstance(editor);
       } catch (error) {
         console.error('Failed to initialize editor', error);
         toast({
@@ -115,14 +112,14 @@ const EditorComponent = ({ pageId, content }: EditorJSProps) => {
     };
     
     loadEditorJS();
-  }, [pageId]);
-  
-  // Re-render the editor when the content changes
-  useEffect(() => {
-    if (editorInstance && content) {
-      editorInstance.render(content);
-    }
-  }, [content, editorInstance]);
+    
+    return () => {
+      if (editorRef.current) {
+        editorRef.current.destroy();
+        editorRef.current = null;
+      }
+    };
+  }, [pageId, content]);
   
   return (
     <div className="min-h-[500px] prose max-w-none">

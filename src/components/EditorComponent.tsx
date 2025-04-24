@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { usePageStore } from "@/stores/pageStore";
+import { debounce } from "@/lib/utils";
 
 // Define EditorJS and its tools without direct imports to avoid SSR issues
 interface EditorJSProps {
@@ -12,10 +13,28 @@ interface EditorJSProps {
 const EditorComponent = ({ pageId, content }: EditorJSProps) => {
   const editorRef = useRef<any>(null);
   const [editorInstance, setEditorInstance] = useState<any>(null);
-  const { updatePage } = usePageStore();
+  const { updatePage, getPage } = usePageStore();
   const { toast } = useToast();
+  const initializedRef = useRef<boolean>(false);
+  
+  // Use debounced save to prevent too frequent updates
+  const debouncedSave = useRef(
+    debounce(async (savedData: any) => {
+      try {
+        const currentPage = getPage(pageId);
+        if (currentPage) {
+          updatePage(pageId, { content: savedData });
+        }
+      } catch (e) {
+        console.error('Failed to save editor data', e);
+      }
+    }, 500)
+  ).current;
   
   useEffect(() => {
+    // Only initialize the editor once to prevent cursor reset issues
+    if (initializedRef.current) return;
+    
     let EditorJS: any;
     let Header: any;
     let Paragraph: any;
@@ -91,7 +110,7 @@ const EditorComponent = ({ pageId, content }: EditorJSProps) => {
           onChange: async () => {
             try {
               const savedData = await editor.save();
-              updatePage(pageId, { content: savedData });
+              debouncedSave(savedData);
             } catch (e) {
               console.error('Failed to save editor data', e);
             }
@@ -101,6 +120,7 @@ const EditorComponent = ({ pageId, content }: EditorJSProps) => {
         
         editorRef.current = editor;
         setEditorInstance(editor);
+        initializedRef.current = true;
       } catch (error) {
         console.error('Failed to initialize editor', error);
         toast({
@@ -117,9 +137,10 @@ const EditorComponent = ({ pageId, content }: EditorJSProps) => {
       if (editorRef.current) {
         editorRef.current.destroy();
         editorRef.current = null;
+        initializedRef.current = false;
       }
     };
-  }, [pageId, content]);
+  }, [pageId]);
   
   return (
     <div className="min-h-[500px] prose max-w-none">

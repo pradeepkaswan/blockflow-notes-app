@@ -15,11 +15,12 @@ interface PageStore {
   addPage: () => Page;
   updatePage: (id: string, page: Partial<Page>) => void;
   deletePage: (id: string) => void;
+  getPage: (id: string) => Page | undefined;
 }
 
 export const usePageStore = create<PageStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       pages: [],
       addPage: () => {
         const newPage: Page = {
@@ -46,6 +47,10 @@ export const usePageStore = create<PageStore>()(
         }));
 
         return newPage;
+      },
+      getPage: (id: string) => {
+        const state = get();
+        return state.pages.find(page => page.id === id);
       },
       updatePage: (id, updatedPage) => {
         set((state) => ({
